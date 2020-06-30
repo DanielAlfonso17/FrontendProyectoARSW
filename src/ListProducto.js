@@ -37,21 +37,20 @@ export class ListProducto extends Component{
   }
 
   async remove(id){
-    this.productoService.delete(id)
+    await this.productoService.delete(id)
     let updateProductos = [...this.state.productos].filter(i=>i.id !== id);
     this.setState({productos: updateProductos});
 
   }
 
 
-  async listarProductos(){
-    console.log(document.getElementById("name").value);
+  listarProductos(){
     this.productoService.getAll().then(data => {
       this.setState({ productos: data});
     });
   }
 
-  async listarProductosPalabra(palabra){
+  listarProductosPalabra(palabra){
     if(palabra != null && palabra !== ""){
       this.productoService.getByNombre(palabra).then(data => {
         this.setState( { productos: data } )

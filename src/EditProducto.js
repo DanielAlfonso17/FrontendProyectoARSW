@@ -8,7 +8,7 @@ export class EditProducto extends Component {
   productoVacio = {
     "nombre": '',
     "precio": '',
-    "foto": '',
+    "foto": 'noproduct.jpg',
     "descripcion": ''
   }
 
@@ -50,15 +50,18 @@ export class EditProducto extends Component {
       fotoSel = null;
     }
     this.setState({fotoSeleccionada: fotoSel});
-    console.log(this.state.fotoSeleccionada)
   }
 
   async handleSubmit(event){
     event.preventDefault();
     const {producto} = this.state;
     console.log(producto)
+    if(producto.id){
       this.productoService.save(producto);
-      this.productoService.subirFoto(this.state.fotoSeleccionada,producto.id);
+      await(this.productoService.subirFoto(this.state.fotoSeleccionada,producto.id));
+    }else{
+      this.productoService.save(producto);
+    }
       this.props.history.push('/productos');
 
 
@@ -91,7 +94,7 @@ export class EditProducto extends Component {
          </FormGroup>
          <FormGroup>
             <Label for="foto">Foto</Label>
-            <Input type="file" name="foto" id="foto" onChange={this.seleccionarFoto} autoComplete="address-level1"/>
+            <Input type="file" name="foto" id="foto" onChange={this.seleccionarFoto}  autoComplete="address-level1"/>
          </FormGroup>
          <FormGroup>
            <Button color="primary" className="mr-2" type="submit">Guardar producto</Button>

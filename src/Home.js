@@ -8,7 +8,7 @@ export class Home extends Component {
     return (
       <div className="container">
 
-          <button class="btn btn-success"><Link to="/productos">Ver productos</Link></button>
+          <button className="btn btn-primary"><Link to="/productos">Ver productos</Link></button>
 
       </div>
     );
