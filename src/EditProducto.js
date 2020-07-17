@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { Button, FormGroup, Input, Label } from 'reactstrap';
 import { ProductoService } from './service/ProductoService'
-import SweetAlert from 'sweetalert2-react';
+import Swal from 'sweetalert2'
 
 export class EditProducto extends Component {
   productoVacio = {
@@ -58,9 +58,11 @@ export class EditProducto extends Component {
     console.log(producto)
     if(producto.id){
       this.productoService.save(producto);
-      await(this.productoService.subirFoto(this.state.fotoSeleccionada,producto.id));
+
     }else{
       this.productoService.save(producto);
+    }if(this.state.fotoSeleccionada){
+      await(this.productoService.subirFoto(this.state.fotoSeleccionada,producto.id));
     }
       this.props.history.push('/productos');
 
@@ -70,10 +72,9 @@ export class EditProducto extends Component {
   render() {
    const {producto} = this.state;
    const title = <h2>{producto.id ? 'Editar producto' : 'Agregar producto'}</h2>;
-
    return (
-
      <div>
+     <div className="container">
 
        {title}
        <form onSubmit={this.handleSubmit}>
@@ -92,7 +93,7 @@ export class EditProducto extends Component {
            <Input type="text" name="descripcion" id="descripcion" value={producto.descripcion || ''}
                   onChange={this.handleChange} autoComplete="address-level1"/>
          </FormGroup>
-         <FormGroup>
+         <FormGroup className={producto.id ? '':'hidden'}>
             <Label for="foto">Foto</Label>
             <Input type="file" name="foto" id="foto" onChange={this.seleccionarFoto}  autoComplete="address-level1"/>
          </FormGroup>
@@ -102,6 +103,7 @@ export class EditProducto extends Component {
          </FormGroup>
 
        </form>
+   </div>
    </div>
 
    )}

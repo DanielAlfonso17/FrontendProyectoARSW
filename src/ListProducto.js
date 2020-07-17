@@ -3,6 +3,7 @@ import {ProductoService} from './service/ProductoService';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
+import Swal from 'sweetalert2'
 export class ListProducto extends Component{
   constructor(){
     super();
@@ -14,6 +15,7 @@ export class ListProducto extends Component{
 
   componentDidMount(){
     this.listarProductos()
+    this.productoService.getProductosVendedorEmail();
   }
 
   mostrarProductos(){
@@ -37,10 +39,21 @@ export class ListProducto extends Component{
   }
 
   async remove(id){
-    await this.productoService.delete(id)
-    let updateProductos = [...this.state.productos].filter(i=>i.id !== id);
-    this.setState({productos: updateProductos});
-
+    Swal.fire({
+     title: 'Esta seguro de borrar el producto?',
+     text: 'Borrara el producto del catalogo',
+     icon: 'warning',
+     showCancelButton: true,
+     confirmButtonColor: '#3085d6',
+     cancelButtonColor: '#d33',
+     confirmButtonText: 'Si!'
+   }).then((result) => {
+     if(result.value){
+      this.productoService.delete(id)
+      let updateProductos = [...this.state.productos].filter(i=>i.id !== id);
+      this.setState({productos: updateProductos});
+    }
+    })
   }
 
 
@@ -75,6 +88,7 @@ export class ListProducto extends Component{
   render(){
         return (
           <div>
+            <div className="container">
             <input type="text" id="name" className="form-control w-100 mt-5" onChange={this.handleChange} placeholder="Buscar producto" aria-label="Recipient's username" aria-describedby="button-addon2"/>
             <Button color="primary" tag={Link} to="/productos/new" className="mt-2">Crear producto</Button>
             <div className="input-group-append mt-3">
@@ -100,10 +114,11 @@ export class ListProducto extends Component{
 
               </div>
             </div>
+            </div>
         )
 
   }
 
 }
 
-export default ListProducto;
+  export default ListProducto;

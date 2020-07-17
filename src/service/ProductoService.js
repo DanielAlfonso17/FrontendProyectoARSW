@@ -1,4 +1,5 @@
 import axios from 'axios';
+import AuthService from './AuthService';
 
 export class ProductoService{
 
@@ -16,7 +17,15 @@ export class ProductoService{
     if (producto.id){
       return axios.put(`${this.urlEndPoint}vendedor/productos/${producto.id}`,producto).then(response => console.log(response.data));
     }else{
-      return axios.post(`${this.urlEndPoint}vendedor/productos/1`,producto).then( response => console.log(response.data));
+      let vendedor;
+      const user = AuthService.getCurrentUser();
+      const correo = user.email;
+      axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`
+      ).then(res => {
+        vendedor= res.data.id
+        axios.post(`${this.urlEndPoint}vendedor/productos/${vendedor}`,producto)
+      })
+
     }
 
   }
@@ -39,4 +48,17 @@ export class ProductoService{
     formData.append("id", id);
     return axios.post(`${this.urlEndPoint}vendedor/productos/upload`,formData).then(res => console.log(res.data));
     }
+
+  getProductosVendedorEmail(){
+    let vendedor;
+    const user = AuthService.getCurrentUser();
+    const correo = user.email;
+    axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`
+    ).then(res => {
+      vendedor= res.data.id
+      axios.get(`${this.urlEndPoint}vendedor/productos/vendedor/${vendedor}`).then((res) => {console.log(res.data)})
+    })
+
+
+  }
 }
