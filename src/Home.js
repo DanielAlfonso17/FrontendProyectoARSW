@@ -33,8 +33,6 @@ export class Home extends Component {
     return (
       <div>
       <div className="container">
-
-          <button className="btn btn-primary"><Link to="/productos">Ver productos</Link></button>
           <header className = "jumbotron">
             <h3>{this.state.content}</h3>
           </header>

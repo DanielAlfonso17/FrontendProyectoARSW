@@ -1,19 +1,20 @@
 import axios from 'axios';
-import AuthHeader from './AuthHeader';
+import authHeader from './AuthHeader';
 
 const AUTH_URL = 'http://localhost:8080/auth/test'
 
 class UserService{
   getPublicContent(){
-    return axios.get(AUTH_URL + 'all');
+    return axios.get(AUTH_URL + '/all');
   }
 
   getCompradorBoard(){
-    return axios.get(AUTH_URL + 'Comprador', { headers: AuthHeader() });
+    return axios.get(AUTH_URL + '/comprador', { headers: authHeader() });
+
   }
 
   getVendedorBoard(){
-    return axios.get(AUTH_URL + 'Vendedor', { headers: AuthHeader() });
+    return axios.get(AUTH_URL + '/vendedor', { headers: authHeader() });
   }
 }
 

@@ -49,16 +49,17 @@ export class ProductoService{
     return axios.post(`${this.urlEndPoint}vendedor/productos/upload`,formData).then(res => console.log(res.data));
     }
 
-  getProductosVendedorEmail(){
-    let vendedor;
+  getVendedor(){
     const user = AuthService.getCurrentUser();
     const correo = user.email;
-    axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`
-    ).then(res => {
-      vendedor= res.data.id
-      axios.get(`${this.urlEndPoint}vendedor/productos/vendedor/${vendedor}`).then((res) => {console.log(res.data)})
-    })
-
-
+    return axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`).then((value) => value.data.productos)
   }
+
+  getComprador(){
+    const user = AuthService.getCurrentUser();
+    const correo = user.email;
+    return axios.get(`${this.urlEndPoint}comprador/correo/${correo}`).then((value) => value.data)
+  }
+
+
 }

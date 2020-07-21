@@ -4,19 +4,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import Swal from 'sweetalert2'
+import AuthService from './service/AuthService';
+import Carrito from './Carrito';
+import PubSub from 'pubsub-js';
+
 export class ListProducto extends Component{
-  constructor(){
-    super();
-    this.state = {busqueda: ''};
+  constructor(props){
+    super(props);
+    this.state = {busqueda: '', comprador: false, carrito:[]};
     this.productoService = new ProductoService();
     this.handleChange = this.handleChange.bind(this);
-
   }
 
   componentDidMount(){
     this.listarProductos()
-    this.productoService.getProductosVendedorEmail();
-  }
+    const user = AuthService.getCurrentUser();
+    if(user){
+      this.setState({
+        comprador: user.roles.includes("ROLE_COMPRADOR")        
+      })
+    }
+    }
+
 
   mostrarProductos(){
     let path = "http://localhost:8080/vendedor/uploads/img/";
@@ -30,32 +39,13 @@ export class ListProducto extends Component{
                 <td>{producto.nombre}</td>
                 <td>{producto.precio}</td>
                 <td>{producto.vendedor.nombre}</td>
-                <td><Button className="btn btn-danger" onClick={() => this.remove(producto.id)}>Delete</Button></td>
-                <td><Button className="btn btn-success" tag={Link} to={`/productos/${producto.id}`}>Editar</Button></td>
+                {this.state.comprador && (<td><Button className="btn btn-success" onClick={() => {PubSub.publish('add',producto)}}>Añadir al carrito</Button></td>)}
+                {this.state.comprador && (<td><Button className="btn btn-warning"><Link to={`/chat/${producto.nombre}`}>Entrar</Link></Button></td>)}
               </tr>
         )
       })
     }
   }
-
-  async remove(id){
-    Swal.fire({
-     title: 'Esta seguro de borrar el producto?',
-     text: 'Borrara el producto del catalogo',
-     icon: 'warning',
-     showCancelButton: true,
-     confirmButtonColor: '#3085d6',
-     cancelButtonColor: '#d33',
-     confirmButtonText: 'Si!'
-   }).then((result) => {
-     if(result.value){
-      this.productoService.delete(id)
-      let updateProductos = [...this.state.productos].filter(i=>i.id !== id);
-      this.setState({productos: updateProductos});
-    }
-    })
-  }
-
 
   listarProductos(){
     this.productoService.getAll().then(data => {
@@ -67,10 +57,18 @@ export class ListProducto extends Component{
     if(palabra != null && palabra !== ""){
       this.productoService.getByNombre(palabra).then(data => {
         this.setState( { productos: data } )
-        console.log(data);
       })
     }
   }
+
+  /**addProductoCarrito(){
+    this.setState({
+      carrito: this.state.carrito.concat(producto)
+    })
+    PubSub.publish('cart.add', this.state.carrito)
+
+  }*/
+
 
   handleChange(event){
     const target = event.target;
@@ -87,10 +85,11 @@ export class ListProducto extends Component{
 
   render(){
         return (
+
           <div>
             <div className="container">
+            <Carrito />
             <input type="text" id="name" className="form-control w-100 mt-5" onChange={this.handleChange} placeholder="Buscar producto" aria-label="Recipient's username" aria-describedby="button-addon2"/>
-            <Button color="primary" tag={Link} to="/productos/new" className="mt-2">Crear producto</Button>
             <div className="input-group-append mt-3">
 
             </div>
@@ -103,17 +102,16 @@ export class ListProducto extends Component{
                     <th>Nombre</th>
                     <th>Precio</th>
                     <th>Vendedor</th>
-                    <th>Eliminar</th>
-                    <th>Editar</th>
+                    {this.state.comprador && (<th>Añadir</th>)}
                   </tr>
                 </thead>
                 <tbody>
                   {this.mostrarProductos()}
                 </tbody>
               </table>
-
               </div>
             </div>
+
             </div>
         )
 

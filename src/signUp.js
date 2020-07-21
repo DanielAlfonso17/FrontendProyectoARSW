@@ -229,7 +229,8 @@ export class SignUp extends Component{
 
 
                       <div className="form-label-group">
-                        <select name="rol" id="roles" value={this.state.rol} onChange={this.onChangeRoles}>
+                        <select className="lg" name="rol" id="roles"  onChange={this.onChangeRoles}>
+                          <option selected="true" disabled="disabled">-----Seleccione Rol------</option>
                           <option value="ROLE_COMPRADOR">Comprador</option>
                           <option value="ROLE_VENDEDOR">Vendedor</option>
                         </select>

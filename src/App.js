@@ -7,7 +7,11 @@ import { EditProducto } from './EditProducto'
 import { Login } from './Login'
 import { SignUp } from './signUp';
 import { Profile } from './Profile';
+import Carrito  from './Carrito'
 import AuthService from './service/AuthService';
+import BoardVendedor from './boardVendedor';
+import BoardComprador from './boardComprador';
+import ChatBox from './ChatBox'
 
 
 export class App extends Component{
@@ -31,10 +35,13 @@ export class App extends Component{
       showVendedorBoard: user.roles.includes("ROLE_VENDEDOR")
       })
     }
+
   }
 
-  logOut(){
+  logOut(event){
+    
     AuthService.logout();
+
   }
   render(){
     const { currentUser, showVendedorBoard, showCompradorBoard } = this.state;
@@ -53,18 +60,39 @@ export class App extends Component{
               <li className="nav-item active">
                 <Link className="nav-link" to={"/productos"}> Productos </Link>
               </li>
+            {showVendedorBoard && (
               <li className="nav-item">
-                <a className="nav-link" href="#">Link</a>
+                <Link to={"/vendedor"} className="nav-link">
+                  VendedorBoard
+                </Link>
               </li>
+            )}
+
+            {showCompradorBoard && (
+
+              <li className="nav-item">
+                <Link to={"/comprador"} className="nav-link">
+                  CompradorBoard
+                </Link>
+              </li>
+
+
+
+            )}
+
+
             </ul>
 
             {currentUser ? (
-              <div className="navbar-nav ml-auto">
+              <div className="navbar-nav float-right">
+
                 <li className="nav-item">
                   <Link to={"/profile"} className="nav-link">
                     {currentUser.username}
                   </Link>
                 </li>
+
+
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link" onClick={this.logOut}>
                     Salir
@@ -72,7 +100,7 @@ export class App extends Component{
                 </li>
               </div>
             ) : (
-              <div className="navbar-nav ml-auto">
+              <div className="navbar-nav">
                 <li className="nav-item">
                   <Link to={"/login"} className="nav-link">
                     Inicia sesión
@@ -84,9 +112,8 @@ export class App extends Component{
                   </Link>
                 </li>
               </div>
-
-
             )}
+
           </div>
         </nav>
         <Switch>
@@ -96,6 +123,11 @@ export class App extends Component{
           <Route path='/login' exact={true} component= { Login } />
           <Route path='/signup' exact={true} component = { SignUp }/>
           <Route path="/profile" exact={true} component = { Profile }/>
+          <Route path="/vendedor" exact={true} component = { BoardVendedor} />
+          <Route path="/comprador" exact={true} component = {BoardComprador} />
+          <Route path="/carrito" exact={true} component = { Carrito }/>
+          <Route path="/chat/:productoid" exact={true} component = { ChatBox }/>
+
 
         </Switch>
 
