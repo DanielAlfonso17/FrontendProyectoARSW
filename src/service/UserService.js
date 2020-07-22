@@ -1,7 +1,7 @@
 import axios from 'axios';
 import authHeader from './AuthHeader';
 
-const AUTH_URL = 'http://localhost:8080/auth/test'
+const AUTH_URL = 'https://offerbuy-arsw.herokuapp.com/auth/test'
 
 class UserService{
   getPublicContent(){

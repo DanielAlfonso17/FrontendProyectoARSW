@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export default class CompradorService{
-  urlEndPoint = "http://localhost:8080/";
+  urlEndPoint = "https://offerbuy-arsw.herokuapp.com/";
 
   getVendedorNombre(nombre){
     return axios.get(`${this.urlEndPoint}vendedor/${nombre}`).then((value) => value.data);

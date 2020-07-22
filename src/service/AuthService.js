@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const AUTH_URL = "http://localhost:8080/auth/";
+const AUTH_URL = "https://offerbuy-arsw.herokuapp.com/auth/";
 
 class AuthService {
   login(username, password){

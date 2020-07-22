@@ -4,23 +4,27 @@ import {ProductoService} from './service/ProductoService';
 import UserService from "./service/UserService";
 import CompradorService from './service/CompradorService';
 import { Link } from 'react-router-dom';
+import AuthService from './service/AuthService';
 
 class BoardComprador extends Component{
   constructor(props){
     super(props);
-      this.state = {busqueda: "",content: ""};
+      this.state = {busqueda: "",content: "",user:""};
       this.productoService = new ProductoService();
       this.compradorService = new CompradorService();
       this.handleChange = this.handleChange.bind(this);
   }
 
   componentDidMount(){
+    const user = AuthService.getCurrentUser();
+
     this.facturasComprador();
     this.listarVendedores();
     UserService.getCompradorBoard().then(
       (response) => {
         this.setState({
-          content: response.data
+          content: response.data,
+          user: user.username
         });
       },
       error => {
@@ -70,7 +74,9 @@ class BoardComprador extends Component{
               <tr key={vendedor.id}>
                 <td>{vendedor.nombre}</td>
                 <td>{vendedor.email}</td>
-                <td><button className="btn btn-warning"><Link to={`/chat/${vendedor.nombre}`}>Contactar</Link></button></td>
+                <td><Link className="btn btn-warning" to={{pathname: "/productosVendedor",
+                                                           search: vendedor.nombre,
+                                                           state: {vendedor: vendedor}}}>Ver Porductos</Link></td>
               </tr>
         )
       })
@@ -78,11 +84,12 @@ class BoardComprador extends Component{
   }
 
   render(){
+
     return(
       <div className="container">
 
         <header className="jumbotron">
-          <h3>{this.state.content}</h3>
+          <h3>{this.state.user}</h3>
           <input type="text" id="name" className="form-control w-100 mt-5" onChange={this.handleChange} placeholder="Buscar Vendedor" aria-label="Recipient's username" aria-describedby="button-addon2"/>
           <table className="table table-responsive-lg table-borderedless table-striped my-4">
             <thead className="thead-dark">

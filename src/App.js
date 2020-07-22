@@ -6,13 +6,14 @@ import { Home } from './Home';
 import { EditProducto } from './EditProducto'
 import { Login } from './Login'
 import { SignUp } from './signUp';
-import { Profile } from './Profile';
+import { Perfil } from './Perfil';
 import Carrito  from './Carrito'
 import AuthService from './service/AuthService';
 import BoardVendedor from './boardVendedor';
 import BoardComprador from './boardComprador';
 import ChatBox from './ChatBox'
-
+import Swal from 'sweetalert2'
+import ProductosVendedor from "./ProductosVendedor"
 
 export class App extends Component{
   constructor(props){
@@ -39,8 +40,18 @@ export class App extends Component{
   }
 
   logOut(event){
-    
+    Swal.fire({
+              title: 'Cierre de sesion exitoso!',
+              type: 'success',
+              icon: 'success',
+              confirmButtonColor: '#3085d6',
+              text: `Sesión cerrada con exito ${this.state.currentUser.username}`,
+          })
     AuthService.logout();
+
+
+
+
 
   }
   render(){
@@ -122,11 +133,12 @@ export class App extends Component{
           <Route path='/productos/:id' component={EditProducto}/>
           <Route path='/login' exact={true} component= { Login } />
           <Route path='/signup' exact={true} component = { SignUp }/>
-          <Route path="/profile" exact={true} component = { Profile }/>
+          <Route path="/profile" exact={true} component = { Perfil }/>
           <Route path="/vendedor" exact={true} component = { BoardVendedor} />
           <Route path="/comprador" exact={true} component = {BoardComprador} />
           <Route path="/carrito" exact={true} component = { Carrito }/>
-          <Route path="/chat/:productoid" exact={true} component = { ChatBox }/>
+          <Route path="/chat/:producto/:precio" exact={true} component = { ChatBox }/>
+          <Route path="/productosVendedor" exact={true} component ={ ProductosVendedor}/>
 
 
         </Switch>

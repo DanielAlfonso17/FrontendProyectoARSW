@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SockJS from "sockjs-client"
 import Stomp from "stompjs"
 import AuthService from './service/AuthService';
-
+import Swal from 'sweetalert2'
 var stompClient = null;
 
 class ChatBox extends Component {
@@ -16,7 +16,7 @@ class ChatBox extends Component {
         enSubasta: false,
         mensaje: '',
         ganador:'',
-        precio: '5000',
+        precio: '',
         vendedor: false,
         comprador: false
 
@@ -33,27 +33,40 @@ class ChatBox extends Component {
 
   componentDidMount() {
     const user = AuthService.getCurrentUser();
+    const {precio} = this.props.match.params;
+    console.log(precio)
     this.setState({
       username: user.username,
       vendedor: user.roles.includes("ROLE_VENDEDOR"),
-      comprador: user.roles.includes("ROLE_COMPRADOR")
+      comprador: user.roles.includes("ROLE_COMPRADOR"),
+      precio: precio
     })
     this.entrarSubasta();
   }
 
   entrarSubasta(){
-    const {productoid} = this.props.match.params
-     var socket = new SockJS('http://localhost:8080/ws');
+    const {producto} = this.props.match.params
+     var socket = new SockJS('https://offerbuy-arsw.herokuapp.com/ws');
      stompClient = Stomp.over(socket);
      stompClient.connect({}, (frame) => {
          console.log('Connected: ' + frame);
-         stompClient.subscribe('/topic/chat.' + productoid, (res) => {
+         stompClient.subscribe('/topic/chat.' + producto, (res) => {
            if(res.body.includes("true") || res.body.includes("false")){
              let list= res.body.split(".");
-             console.log(list[0])
              this.setState({
                enSubasta: list[1]
              })
+             if(res.body.includes("false")){
+               Swal.fire({
+                     title: 'Ganador de subasta!',
+                     type: 'success',
+                     icon: 'success',
+                     confirmButtonColor: '#3085d6',
+                     text: `El ganador de la subasta es: ${this.state.ganador}`,
+                 })
+
+             }
+
            }
            else if(res.body === this.state.precio){
              console.log("se mantuvo el precio");
@@ -71,8 +84,8 @@ class ChatBox extends Component {
 
   handleSubmit(event){
     event.preventDefault();
-    const {productoid} = this.props.match.params
-    let mensajes = [this.state.mensaje,productoid,this.state.precio,this.state.username]
+    const {producto} = this.props.match.params
+    let mensajes = [this.state.mensaje,producto,this.state.precio,this.state.username]
     stompClient.send("/app/chat", {}, JSON.stringify(mensajes));
   }
 
@@ -87,17 +100,19 @@ class ChatBox extends Component {
   handleEmpezarSubasta(event){
     event.preventDefault();
     let estado = true
-    const {productoid} = this.props.match.params
-    let nombreSala = [estado,productoid]
+    const {producto} = this.props.match.params
+    let nombreSala = [estado,producto]
     stompClient.send("/app/chat", {}, JSON.stringify(nombreSala));
   }
 
   handleFinalizarSubasta(event){
     event.preventDefault();
     let estado = false
-    const {productoid} = this.props.match.params
-    let nombreSala = [estado,productoid,this.state.ganador]
+    const {producto} = this.props.match.params
+    let nombreSala = [estado,producto,this.state.ganador]
     stompClient.send("/app/chat", {}, JSON.stringify(nombreSala));
+
+
   }
 
 

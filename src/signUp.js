@@ -172,8 +172,8 @@ export class SignUp extends Component{
                     ref={c => {
                       this.form = c;
                     }}>
+                      <label htmlFor="inputUser">Username</label>
                       <div className="form-label-group">
-                        <label htmlFor="inputUser">Username</label>
                         <Input
                         type="text"
                         id="inputUser"
@@ -183,7 +183,7 @@ export class SignUp extends Component{
                         validations= {[required,usernamev]}
                         />
                       </div>
-
+                      <label htmlFor="inputNombre">Nombre</label>
                       <div className="form-label-group">
                         <Input
                         type="text"
@@ -192,9 +192,9 @@ export class SignUp extends Component{
                         onChange={this.onChangeNombre}
                         validations= {[required,usernamev]}
                         />
-                        <label htmlFor="inputNombre">Nombre</label>
                       </div>
 
+                      <label htmlFor="inputApellido">Apellido</label>
                       <div className="form-label-group">
                         <Input
                         type="text"
@@ -203,9 +203,9 @@ export class SignUp extends Component{
                         onChange={this.onChangeApellido}
                         validations= {[required,usernamev]}
                         />
-                        <label htmlFor="inputApellido">Apellido</label>
                       </div>
 
+                      <label htmlFor="inputPassword">Password</label>
                       <div className="form-label-group">
                         <Input
                         type="password"
@@ -213,9 +213,10 @@ export class SignUp extends Component{
                         className="form-control"
                         onChange={this.onChangePassword}
                         validations ={[required, passwordv]}/>
-                        <label htmlFor="inputPassword">Password</label>
+
                       </div>
 
+                      <label htmlFor="inputEmail">Email</label>
                       <div className="form-label-group">
                         <Input
                         type="email"
@@ -223,7 +224,7 @@ export class SignUp extends Component{
                         className="form-control"
                         onChange={this.onChangeEmail}
                         validations={[required,emailv]}/>
-                        <label htmlFor="inputEmail">Email</label>
+
                       </div>
 
 

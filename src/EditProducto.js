@@ -58,15 +58,26 @@ export class EditProducto extends Component {
     console.log(producto)
     if(producto.id){
       this.productoService.save(producto);
-
+      Swal.fire({
+          title: 'Modificación exitosa',
+          type: 'success',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          text: `Se modifico el producto ${producto.nombre} exitosamente`,
+      })
     }else{
       this.productoService.save(producto);
+      Swal.fire({
+          title: 'Creación exitosa',
+          type: 'success',
+          icon: 'success',
+          confirmButtonColor: '#3085d6',
+          text: `Se creo el producto ${producto.nombre} exitosamente`,
+      })
     }if(this.state.fotoSeleccionada){
       await(this.productoService.subirFoto(this.state.fotoSeleccionada,producto.id));
     }
-      this.props.history.push('/productos');
-
-
+      this.props.history.push('/vendedor');
   }
 
   render() {

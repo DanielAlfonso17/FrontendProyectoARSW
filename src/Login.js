@@ -100,16 +100,18 @@ export class Login extends Component{
                         this.form = c;
                       }}
                     >
+                      <label htmlFor="inputUser">Username</label>
                       <div className="form-label-group">
                         <Input type="text"
                         id="inputUser"
                         className="form-control"
                         value={this.state.username}
                         onChange={this.onChangeUsername}
-                        validations={[required]} />
-                        <label htmlFor="inputUser">Username</label>
-                      </div>
+                        validations={[required]}
+                        placeholder="username" />
 
+                      </div>
+                      <label htmlFor="inputPassword">Password</label>
                       <div className="form-label-group">
                         <Input type="password"
                         id="inputPassword"
@@ -117,7 +119,7 @@ export class Login extends Component{
                         value={this.state.password}
                         onChange={this.onChangePassword}
                         validations={[required]}/>
-                        <label htmlFor="inputPassword">Password</label>
+
                       </div>
                       <button className="btn btn-lg btn-primary btn-block btn-login text-uppercase font-weight-bold mb-2" type="submit">Sign in</button>
                     </Form>

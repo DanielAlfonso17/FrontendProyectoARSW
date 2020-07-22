@@ -4,19 +4,22 @@ import UserService from "./service/UserService";
 import { Link } from 'react-router-dom';
 import { Button } from 'reactstrap';
 import Swal from 'sweetalert2'
+import AuthService from './service/AuthService';
 export class BoardVendedor extends Component{
   constructor(){
     super();
-    this.state= {content: ""}
+    this.state= {content: "",user: ""}
     this.productoService = new ProductoService();
 
   }
 
   componentDidMount(){
+    const user = AuthService.getCurrentUser();
     UserService.getVendedorBoard().then(
       (response) => {
         this.setState({
           content: response.data,
+          user: user.username
         });
       },
       error => {
@@ -55,7 +58,7 @@ export class BoardVendedor extends Component{
   }
 
   mostrarProductos(){
-    let path = "http://localhost:8080/vendedor/uploads/img/";
+    let path = "https://offerbuy-arsw.herokuapp.com/comprador/uploads/img/";
     if(this.state.productos){
       return this.state.productos.map((producto) =>{
         return (
@@ -68,7 +71,7 @@ export class BoardVendedor extends Component{
 
                 <td><Button className="btn btn-danger" onClick={() => this.remove(producto.id)}>Delete</Button></td>
                 <td><Button className="btn btn-success" tag={Link} to={`/productos/${producto.id}`}>Editar</Button></td>
-                <td><Button className="btn btn-warning"><Link to={`/chat/${producto.nombre}`}>Subastar</Link></Button></td>
+                <td><Link className="btn btn-warning" to={`/chat/${producto.nombre}/${producto.precio}`}>Subastar</Link></td>
               </tr>
         )
       })
@@ -80,7 +83,7 @@ export class BoardVendedor extends Component{
     return(
       <div className="container">
         <header className="jumbotron">
-          <h3>{this.state.content}</h3>
+          <h3>{this.state.user}</h3>
           <Button color="primary" tag={Link} to="/productos/new" className="mt-2">Crear producto</Button>
           <div className="input-group mb-3">
             <table className="table table-responsive-lg table-borderedless table-striped my-4">

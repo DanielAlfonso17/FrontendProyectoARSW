@@ -3,7 +3,7 @@ import AuthService from './AuthService';
 
 export class ProductoService{
 
-  urlEndPoint = "http://localhost:8080/";
+  urlEndPoint = "https://offerbuy-arsw.herokuapp.com/";
 
   getAll(){
     return axios.get(this.urlEndPoint+"comprador/productos").then(res => res.data);
@@ -19,10 +19,10 @@ export class ProductoService{
     }else{
       let vendedor;
       const user = AuthService.getCurrentUser();
-      const correo = user.email;
-      axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`
+      const username = user.username;
+      axios.get(`${this.urlEndPoint}vendedor/get/${username}`
       ).then(res => {
-        vendedor= res.data.id
+        vendedor = res.data.id
         axios.post(`${this.urlEndPoint}vendedor/productos/${vendedor}`,producto)
       })
 
@@ -46,13 +46,20 @@ export class ProductoService{
     let formData = new FormData();
     formData.append("archivo", archivo);
     formData.append("id", id);
-    return axios.post(`${this.urlEndPoint}vendedor/productos/upload`,formData).then(res => console.log(res.data));
+    return axios.post(`${this.urlEndPoint}vendedor/productos/upload`,formData).then(res => console.log(res));
     }
+
+  listarProductoPrecios(precioI, precioF){
+    return axios.get(`${this.urlEndPoint}comprador/productos/listar/${precioI}/${precioF}`).then((value) =>  value.data)
+  }
 
   getVendedor(){
     const user = AuthService.getCurrentUser();
-    const correo = user.email;
-    return axios.get(`${this.urlEndPoint}vendedor/correo/${correo}`).then((value) => value.data.productos)
+    const username = user.username;
+    return axios.get(`${this.urlEndPoint}vendedor/get/${username}`).then((value) =>
+     value.data.productos
+  )
+
   }
 
   getComprador(){
