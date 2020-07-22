@@ -24,7 +24,7 @@
     "react-validation": "^3.0.7",
     "reactstrap": "^8.5.1",
     "rxjs": "^6.6.0",
-    "server": "^1.0.29",
+    "serve": "^11.3.2",
     "sockjs-client": "^1.4.0",
     "stompjs": "^2.3.3",
     "sweetalert2-react": "^0.8.3",
